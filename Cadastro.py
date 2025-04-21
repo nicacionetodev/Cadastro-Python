@@ -37,7 +37,7 @@ def cadastrar():
                     print("Esse usuário já existe! Tente outro nome.")
                     return
     except FileNotFoundError:
-        pass  # Arquivo ainda não existe, então tudo bem
+        pass 
 
     with open("usuario.txt", "a") as arquivo:
         arquivo.write(f"{usuario}:{senha}:{email}\n")
@@ -74,6 +74,7 @@ def mudarsenha():
                 usuario_encontrado = True
                 codigo = str(random.randint(0, 9999)).zfill(4)
                 print(f"(Simulado) Código enviado para o e-mail {email}: {codigo}")
+                enviar_email(email, codigo)
 
                 tentativa = input("Digite o código que foi enviado: ")
                 if tentativa == codigo:
@@ -96,5 +97,43 @@ def mudarsenha():
     except FileNotFoundError:
         print("Arquivo de usuários não encontrado.")
 
-# Inicia o menu
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def enviar_email(destinatario, codigo):
+    remetente = "nicaciodev313@gmail.com"
+    senha = "zrpg jboq iscu lqjd"
+
+    assunto = "Código de Verificação - Alteração de Senha"
+    corpo = f"""
+Olá!
+
+Você solicitou a alteração de senha do seu usuário.
+Seu código de verificação é: {codigo}
+
+Se não foi você, ignore este e-mail.
+
+Atenciosamente,
+Sistema de usuários.
+"""
+
+    
+    mensagem = MIMEMultipart()
+    mensagem["From"] = remetente
+    mensagem["To"] = destinatario
+    mensagem["Subject"] = assunto
+    mensagem.attach(MIMEText(corpo, "plain"))
+
+    try:
+    
+        servidor = smtplib.SMTP("smtp.gmail.com", 587)
+        servidor.starttls()
+        servidor.login(remetente, senha)
+        servidor.sendmail(remetente, destinatario, mensagem.as_string())
+        servidor.quit()
+        print(f"Código enviado com sucesso para {destinatario}")
+    except Exception as e:
+        print("Erro ao enviar o e-mail:", e)
+
 menu()
