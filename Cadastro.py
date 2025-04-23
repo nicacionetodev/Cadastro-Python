@@ -102,8 +102,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 def enviar_email(destinatario, codigo):
-    remetente = "nicaciodev313@gmail.com"
-    senha = "zrpg jboq iscu lqjd"
+    remetente = "coloque seu email"
+    senha = "coloque a senha do google para o phyton"
 
     assunto = "Código de Verificação - Alteração de Senha"
     corpo = f"""
